@@ -128,27 +128,30 @@ def partition(arr, low, high):
 
         # search starting from high
         if search_from_high:
-            while arr[high] > pivot and high != low:
+            while arr[high] >= pivot and high != low:
                 high -= 1
-            if high > low:
+            if high != low:
                 arr[low] = arr[high]
                 print(*arr, sep=",")
                 low += 1
                 search_from_high = False
         else:
-            while arr[low] <= pivot and high != low :
+            while arr[low] < pivot and high != low :
                 low += 1
-            arr[high] = arr[low]
-            print(*arr, sep=",")
-            high -= 1
-            search_from_high = True
+            if high != low:
+                arr[high] = arr[low]
+                print(*arr, sep=",")
+                high -= 1
+                search_from_high = True
     arr[low] = pivot
     print(*arr, sep=",")
+    # print("pivot", pivot)
     return low
 
 
 
 # arr = [9, 3, 6, 4, 0, 1, 2, 7, 8, 0]
+# arr = [18,17,13]
 # print(*arr, sep=",")
 # insertion_sort(arr)
 # selection_sort(arr)

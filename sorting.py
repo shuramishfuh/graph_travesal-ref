@@ -1,7 +1,8 @@
 import sys
+
+
 # insertion sort printing after each iteration
 def insertion_sort(A):
-    print(*A, sep=", ")
     for i in range(1, len(A)):
         key = A[i]
         j = i - 1
@@ -9,22 +10,19 @@ def insertion_sort(A):
             A[j + 1] = A[j]
             j -= 1
         A[j + 1] = key
-        print(*A, sep=", ")
-    print(*A, sep=", ")
+        print(*A, sep=",")
 
 
 # selection sort printing after each iteration
 def selection_sort(A):
     for i in range(len(A)):
-        copy = A.copy()
         min = i
         for j in range(i + 1, len(A)):
             if A[j] < A[min]:
                 min = j
-        A[i], A[min] = A[min], A[i]
-        if not copy.__eq__(A): print(*copy, sep=", ")
-    print(*A, sep=", ")
-    print(*A, sep=", ")
+        if i != min:
+            A[i], A[min] = A[min], A[i]
+            print(*A, sep=",")
 
 
 # merge sort iteratively printing after each iteration
@@ -54,7 +52,7 @@ def merge_iterative(A, temp, frm, mid, to):
 
 # Iteratively sort sublist `A[low…high]` using a temporary list
 def mergesort_iterative(A):
-    print(*A, sep=", ")
+    print(*A, sep=",")
     low = 0
     high = len(A) - 1
     temp = A.copy()
@@ -66,7 +64,7 @@ def mergesort_iterative(A):
             to = min(i + 2 * m - 1, high)
             merge_iterative(A, temp, frm, mid, to)
         m = 2 * m
-    print(*A, sep=", ")
+    print(*A, sep=",")
 
 
 # merge sort recursively printing after each iteration
@@ -109,12 +107,12 @@ def merge(arr, start, mid, end):
     # copy temp array to the original array
     for i in range(start, end + 1):
         arr[i] = temp[i - start]
-    print(*arr, sep=", ")
+    print(*arr, sep=",")
 
 
 # quick sort recursively printing after each iteration and choosing first element as pivot
 def quick_sort(arr, low, high):
-    if low < high:
+    if low <= high:
         pi = partition(arr, low, high)
         quick_sort(arr, low, pi - 1)
         quick_sort(arr, pi + 1, high)
@@ -122,39 +120,42 @@ def quick_sort(arr, low, high):
 
 # quick sort partition with first element being the pivot and two pointers starting from low and high
 def partition(arr, low, high):
-    piv = arr[low]
-    while low < high:
-        while high > low:
-            if arr[high] < piv:
-                arr[low] = arr[high]
-                print(*arr, sep=", ")
-                break
-            else:
+    init_high= high
+    init_low= low
+    search_from_high = True
+    pivot = arr[low]
+    while low < high and low < len(arr):
+
+        # search starting from high
+        if search_from_high:
+            while arr[high] > pivot and high != low:
                 high -= 1
-        if low < high:
-            low += 1
-
-        while low < high:
-            if arr[low] > piv:
-                arr[high] = arr[low]
-                print(*arr, sep=", ")
-                break
-            else:
+            if high > low:
+                arr[low] = arr[high]
+                print(*arr, sep=",")
                 low += 1
+                search_from_high = False
+        else:
+            while arr[low] <= pivot and high != low :
+                low += 1
+            arr[high] = arr[low]
+            print(*arr, sep=",")
+            high -= 1
+            search_from_high = True
+    arr[low] = pivot
+    print(*arr, sep=",")
+    return low
 
-        arr[high] = piv
-    print(*arr, sep=", ")
-    return high
-
-    # save the first element arr[low]
 
 
 # arr = [9, 3, 6, 4, 0, 1, 2, 7, 8, 0]
+# print(*arr, sep=",")
 # insertion_sort(arr)
 # selection_sort(arr)
 # mergesort_iterative(arr)
 # merge_sort(arr, 0, len(arr) - 1)
 # quick_sort(arr, 0, len(arr) - 1)
+# print(*arr, sep=",")
 
 if __name__ == '__main__':
     args = sys.argv[1:]
@@ -163,10 +164,9 @@ if __name__ == '__main__':
         sys.exit(1)
     passed_args = [x for x in args]
     filename, option = passed_args[0], passed_args[1]
-    print ( option)
     file = open(filename, "r")
-    arr = [int(x) for x in file.readline().split(',') if x.isdigit()]
-    print(*arr, sep=", ")
+    arr = [int(x) for x in file.readline().strip().split(',') if x.isdigit()]
+    print(*arr, sep=",")
     if option == "1":
         insertion_sort(arr)
     elif option == "2":
@@ -175,5 +175,5 @@ if __name__ == '__main__':
         quick_sort(arr, 0, len(arr) - 1)
     elif option == "4":
         merge_sort(arr, 0, len(arr) - 1)
-    print(*arr, sep=", ")
+    print(*arr, sep=",")
 pass
